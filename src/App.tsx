@@ -1,12 +1,11 @@
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import routes from './routes'
 import './styles/global.scss'
 
 function App() {
-  return (
-    <div className="container">
-      <div className="desktop-view"></div>
-      <div className="mobile-view">bye</div>
-    </div>
-  )
+  const router = createBrowserRouter(routes)
+
+  return <RouterProvider router={router} />
 }
 
 export default App
