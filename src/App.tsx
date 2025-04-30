@@ -1,10 +1,10 @@
-import './styles/_main.scss'
+import './styles/global.scss'
 
 function App() {
   return (
-    <div>
-      <h1>Winterview</h1>
-      <p>윙터뷰, 면접에 날개를 달자! 🪽</p>
+    <div className="container">
+      <div className="desktop-view"></div>
+      <div className="mobile-view">bye</div>
     </div>
   )
 }
