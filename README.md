@@ -2,7 +2,7 @@
   <img src="https://github.com/user-attachments/assets/fcbe381a-189e-4d70-ac82-722e12acfd9c" alt="Logo" width="100" >
   <h1>WingTerView</h1>
   <p>
-    <a href="#">서비스 바로가기</a>
+    <a href="https://wingterview.netlify.app/">서비스 바로가기</a>
   </p>
 </div>
 

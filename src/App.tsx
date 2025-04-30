@@ -1,4 +1,4 @@
-import './styles/_main.scss';
+import './styles/_main.scss'
 
 function App() {
   return (
@@ -6,7 +6,7 @@ function App() {
       <h1>Winterview</h1>
       <p>윙터뷰, 면접에 날개를 달자! 🪽</p>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
