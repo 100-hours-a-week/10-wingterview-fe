@@ -43,6 +43,7 @@ export { FindSeatButton } from './seat/FindSeatButton/FindSeatButton'
 export { MyProfileCard } from './mypage/MyProfileCard/MyProfileCard'
 export { FeatureCard } from './mypage/FeatureCard/FeatureCard'
 export { QuizFilterButton } from './mypage/QuizFilterButton/QuizFilterButton'
+export { ProfileEditForm } from './mypage/ProfileEditForm/ProfileEditForm'
 
 // interview-history
 export { InterviewHistoryList } from './interview-history/InterviewHistoryList/InterviewHistoryList'

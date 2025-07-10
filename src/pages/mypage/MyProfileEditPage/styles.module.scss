@@ -7,4 +7,10 @@
 
 .container {
   width: 100%;
+  height: calc(100% - 60px);
+  padding: 40px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
 }
