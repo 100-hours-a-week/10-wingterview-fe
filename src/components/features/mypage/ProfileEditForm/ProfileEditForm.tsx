@@ -5,9 +5,11 @@ import {
   Button,
   KTBOptionToggle,
 } from '@/components/ui'
+import { jobInterestList, techStackList } from '@/constants/tagList'
 import { Pencil } from 'lucide-react'
 import styles from './styles.module.scss'
 import { useProfileStore } from '@/stores'
+import { TagList } from '../TagList/TagList'
 
 interface Props {
   originalProfile: MyProfileData | undefined
@@ -38,6 +40,13 @@ export const ProfileEditForm: React.FC<Props> = ({
     curriculum: curriculum || '',
   })
 
+  const [selectedJobInterests, setSelectedJobInterests] = useState<string[]>(
+    jobInterest || []
+  )
+  const [selectedTechStacks, setSelectedTechStacks] = useState<string[]>(
+    techStack || []
+  )
+
   const curriculums: string[] = ['풀스택', '클라우드', '인공지능']
 
   useEffect(() => {
@@ -46,7 +55,25 @@ export const ProfileEditForm: React.FC<Props> = ({
       nickname: nickname || '',
       curriculum: curriculum || '',
     })
-  }, [name, nickname, curriculum])
+    setSelectedJobInterests(jobInterest || [])
+    setSelectedTechStacks(techStack || [])
+  }, [name, nickname, curriculum, jobInterest, techStack])
+
+  const toggleJobInterests = (tag: string) => {
+    setSelectedJobInterests(prev => {
+      if (prev.includes(tag)) return prev.filter(item => item !== tag)
+      if (prev.length < 3) return [...prev, tag]
+      return prev
+    })
+  }
+
+  const toggleTechStacks = (tag: string) => {
+    setSelectedTechStacks(prev => {
+      if (prev.includes(tag)) return prev.filter(item => item !== tag)
+      if (prev.length < 3) return [...prev, tag]
+      return prev
+    })
+  }
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -128,8 +155,8 @@ export const ProfileEditForm: React.FC<Props> = ({
         ...formData,
         ...currentData,
         isKTB,
-        jobInterest: jobInterest || [],
-        techStack: techStack || [],
+        jobInterest: selectedJobInterests,
+        techStack: selectedTechStacks,
       }
 
       await onSubmit(updatedFormData, imageFile)
@@ -235,6 +262,24 @@ export const ProfileEditForm: React.FC<Props> = ({
             </div>
           )}
         </div>
+      </fieldset>
+
+      <fieldset className={styles.jobInterest}>
+        <h3>희망 직무 (최대 3개)</h3>
+        <TagList
+          tags={jobInterestList}
+          selected={selectedJobInterests}
+          onToggle={toggleJobInterests}
+        />
+      </fieldset>
+
+      <fieldset className={styles.techStack}>
+        <h3>기술 스택 (최대 3개)</h3>
+        <TagList
+          tags={techStackList}
+          selected={selectedTechStacks}
+          onToggle={toggleTechStacks}
+        />
       </fieldset>
 
       <div className={styles.submitButton}>
