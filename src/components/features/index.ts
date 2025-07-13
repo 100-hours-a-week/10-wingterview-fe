@@ -24,7 +24,7 @@ export { AnswerArea } from './interview/AnswerArea/AnswerArea'
 export { AudioController } from './interview/AudioController/AudioController'
 
 // quiz
-export { QuizTypeSelection } from './quiz/QuizTypeSelection/QuizTypeSelection'
+export { QuizTypeButtons } from './quiz/QuizTypeButtons/QuizTypeButtons'
 export { QuizWithChoices } from './quiz/QuizWithChoices/QuizWithChoices'
 export { QuizResultCard } from './quiz/QuizResultCard/QuizResultCard'
 export { QuizResultList } from './quiz/QuizResultList/QuizResultList'
