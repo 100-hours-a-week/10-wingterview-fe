@@ -10,6 +10,12 @@ import { Pencil } from 'lucide-react'
 import styles from './styles.module.scss'
 import { useProfileStore } from '@/stores'
 import { TagList } from '../TagList/TagList'
+import {
+  validateBasicInfo,
+  validateJobInterest,
+  validateTechStack,
+} from '@/utils/validators'
+import { parseSeatPosition } from '@/utils/parseSeatPosition'
 
 interface Props {
   originalProfile: MyProfileData | undefined
@@ -29,6 +35,8 @@ export const ProfileEditForm: React.FC<Props> = ({
     updateTechStack,
     updateProfileImage,
     setIsKTB,
+    formErrors,
+    setFormErrors,
   } = useProfileStore()
 
   const {
@@ -41,7 +49,6 @@ export const ProfileEditForm: React.FC<Props> = ({
   } = originalProfile as MyProfileData
 
   const [isKTB, setIsKTBState] = useState<boolean>(!!curriculum)
-  const [imageError, setImageError] = useState<string>('')
   const [currentData, setCurrentData] = useState({
     name: name || '',
     nickname: nickname || '',
@@ -54,6 +61,8 @@ export const ProfileEditForm: React.FC<Props> = ({
     techStack || []
   )
 
+  const [showValidationErrors, setShowValidationErrors] = useState(false)
+
   const curriculums: string[] = ['풀스택', '클라우드', '인공지능']
 
   useEffect(() => {
@@ -65,7 +74,10 @@ export const ProfileEditForm: React.FC<Props> = ({
     setSelectedJobInterests(jobInterest || [])
     setSelectedTechStacks(techStack || [])
     setIsKTBState(!!curriculum)
-  }, [name, nickname, curriculum, jobInterest, techStack])
+
+    setFormErrors({})
+    setShowValidationErrors(false)
+  }, [name, nickname, curriculum, jobInterest, techStack, setFormErrors])
 
   const toggleJobInterests = (tag: string) => {
     setSelectedJobInterests(prev => {
@@ -73,6 +85,11 @@ export const ProfileEditForm: React.FC<Props> = ({
       if (prev.length < 3) return [...prev, tag]
       return prev
     })
+
+    if (showValidationErrors && formErrors.jobInterest) {
+      const { ...rest } = formErrors
+      setFormErrors(rest)
+    }
   }
 
   const toggleTechStacks = (tag: string) => {
@@ -81,6 +98,11 @@ export const ProfileEditForm: React.FC<Props> = ({
       if (prev.length < 3) return [...prev, tag]
       return prev
     })
+
+    if (showValidationErrors && formErrors.techStack) {
+      const { ...rest } = formErrors
+      setFormErrors(rest)
+    }
   }
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,12 +112,20 @@ export const ProfileEditForm: React.FC<Props> = ({
 
       if (file) {
         if (file.size > 5 * 1024 * 1024) {
-          setImageError('5MB 이하의 파일만 업로드가 가능합니다.')
+          setFormErrors({
+            ...formErrors,
+            imageError: '5MB 이하의 파일만 업로드가 가능합니다.',
+          })
+          setShowValidationErrors(true)
           return
         }
 
         if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
-          setImageError('jpg, jpeg, png만 업로드가 가능합니다.')
+          setFormErrors({
+            ...formErrors,
+            imageError: 'jpg, jpeg, png만 업로드가 가능합니다.',
+          })
+          setShowValidationErrors(true)
           return
         }
       }
@@ -107,7 +137,11 @@ export const ProfileEditForm: React.FC<Props> = ({
         setImageURL(url)
       }
       reader.readAsDataURL(file)
-      setImageError('')
+
+      if (formErrors.imageError) {
+        const { ...rest } = formErrors
+        setFormErrors(rest)
+      }
     }
   }
 
@@ -121,7 +155,11 @@ export const ProfileEditForm: React.FC<Props> = ({
   const handleResetImage = () => {
     setImageURL('')
     setImageFile(null)
-    setImageError('')
+
+    if (formErrors.imageError) {
+      const { ...rest } = formErrors
+      setFormErrors(rest)
+    }
 
     const fileInput = document.getElementById(
       'profile-edit-upload'
@@ -138,6 +176,11 @@ export const ProfileEditForm: React.FC<Props> = ({
         curriculum: '',
       }))
     }
+
+    if (showValidationErrors && formErrors.curriculum) {
+      const { ...rest } = formErrors
+      setFormErrors(rest)
+    }
   }
 
   const handleInputChange = (field: string, value: string) => {
@@ -145,6 +188,11 @@ export const ProfileEditForm: React.FC<Props> = ({
       ...prev,
       [field]: value,
     }))
+
+    if (showValidationErrors && formErrors[field]) {
+      const { ...rest } = formErrors
+      setFormErrors(rest)
+    }
   }
 
   const handleRadioChange = (value: string) => {
@@ -152,10 +200,65 @@ export const ProfileEditForm: React.FC<Props> = ({
       ...prev,
       curriculum: value,
     }))
+
+    if (showValidationErrors && formErrors.curriculum) {
+      const { ...rest } = formErrors
+      setFormErrors(rest)
+    }
+  }
+
+  const seatCode = originalProfile?.seatCode ? originalProfile?.seatCode : ''
+
+  const validateForm = (): boolean => {
+    const formData = {
+      name: currentData.name,
+      nickname: currentData.nickname,
+      curriculum: isKTB ? currentData.curriculum : '',
+      jobInterest: selectedJobInterests,
+      techStack: selectedTechStacks,
+      profileImageName: '',
+      seatPosition: parseSeatPosition(seatCode),
+      isKTB,
+    }
+
+    const basicInfoValidation = validateBasicInfo(formData)
+    const jobInterestValidation = validateJobInterest(formData)
+    const techStackValidation = validateTechStack(formData)
+
+    const allErrors = {
+      ...basicInfoValidation.errors,
+      ...jobInterestValidation.errors,
+      ...techStackValidation.errors,
+    }
+
+    if (formErrors.imageError) {
+      allErrors.imageError = formErrors.imageError
+    }
+
+    setFormErrors(allErrors)
+
+    return (
+      basicInfoValidation.isValid &&
+      jobInterestValidation.isValid &&
+      techStackValidation.isValid &&
+      !formErrors.imageError
+    )
+  }
+
+  const getValidationErrors = (): string[] => {
+    return Object.entries(formErrors)
+      .filter(([, value]) => value)
+      .map(([, value]) => value)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    setShowValidationErrors(true)
+
+    if (!validateForm()) {
+      return
+    }
 
     try {
       updateBasicInfo(
@@ -176,6 +279,8 @@ export const ProfileEditForm: React.FC<Props> = ({
       console.error('프로필 수정 실패:', error)
     }
   }
+
+  const validationErrors = getValidationErrors()
 
   return (
     <form className={styles.profileEditForm} onSubmit={handleSubmit}>
@@ -216,8 +321,6 @@ export const ProfileEditForm: React.FC<Props> = ({
             사진 삭제
           </button>
         )}
-
-        {imageError && <ErrorMessage error={imageError} />}
       </fieldset>
 
       <fieldset className={styles.basicInfo}>
@@ -293,6 +396,18 @@ export const ProfileEditForm: React.FC<Props> = ({
           onToggle={toggleTechStacks}
         />
       </fieldset>
+
+      {showValidationErrors && validationErrors.length > 0 && (
+        <div className={styles.validationErrors}>
+          <ul>
+            {validationErrors.map((error, index) => (
+              <li key={index}>
+                <ErrorMessage error={error} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className={styles.submitButton}>
         <Button text={'프로필 수정'} onClick={() => {}} />
