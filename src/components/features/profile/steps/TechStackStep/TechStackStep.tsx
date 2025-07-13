@@ -2,27 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { ClickableTag, ErrorMessage } from '@/components/ui'
 import { useProfileStore } from '@/stores/profileStore'
 import styles from './styles.module.scss'
+import { techStackList } from '@/constants/tagList'
 
 export const TechStackStep: React.FC = React.memo(() => {
   const { updateTechStack, formErrors, formData } = useProfileStore()
   const [selected, setSelected] = useState<string[]>(formData.techStack)
-
-  const taglist: string[] = [
-    'Java',
-    'Spring',
-    'React',
-    'Python',
-    'Kubernetes',
-    'AWS',
-    'Pytorch',
-    'FastAPI',
-    'DevOps',
-    'MLOps',
-    '보안',
-    'Langchain',
-    '데이터베이스',
-    '소프트웨어 아키텍처',
-  ]
 
   const toggleTag = (tag: string): void => {
     if (selected.includes(tag)) {
@@ -48,13 +32,13 @@ export const TechStackStep: React.FC = React.memo(() => {
         )}
       </div>
       <div className={styles.tagList}>
-        {taglist.map(tag => (
+        {techStackList.map(name => (
           <ClickableTag
-            key={tag}
-            label={tag}
-            selected={selected.includes(tag)}
-            onClick={() => toggleTag(tag)}
-            disabled={isMaxTagsSelected && !selected.includes(tag)}
+            key={name}
+            label={name}
+            onClick={() => toggleTag(name)}
+            isSelected={selected.includes(name)}
+            disabled={isMaxTagsSelected && !selected.includes(name)}
           />
         ))}
       </div>

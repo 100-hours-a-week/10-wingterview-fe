@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { fetchMyProfile, submitProfile } from '@/api/profileAPI'
+import { editProfile, fetchMyProfile, submitProfile } from '@/api/profileAPI'
 import { useAuthStore, useProfileStore } from '@/stores'
 import { useImageUpload } from '../presigned'
 
 type ProfileAction = 'create' | 'get' | 'edit'
 
-export const useProfile = (action: ProfileAction) => {
+export const useProfile = (action: ProfileAction, userId?: string) => {
   const queryClient = useQueryClient()
   const { uploadImage } = useImageUpload()
   const { formData, imageFile } = useProfileStore()
@@ -26,6 +26,10 @@ export const useProfile = (action: ProfileAction) => {
 
       if (action === 'create') {
         return await submitProfile(formData)
+      }
+
+      if (action === 'edit') {
+        return await editProfile(formData, userId as string)
       }
     },
 
