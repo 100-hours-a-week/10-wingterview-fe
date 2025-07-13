@@ -2,12 +2,12 @@ import { ArrowRight, Clock, Check } from 'lucide-react'
 import styles from './styles.module.scss'
 
 interface Props {
-  startCSQuiz: () => void
+  onNext: () => void
   startReviewQuiz: () => void
 }
 
 export const QuizTypeButtons: React.FC<Props> = ({
-  startCSQuiz,
+  onNext,
   startReviewQuiz,
 }) => {
   return (
@@ -38,7 +38,7 @@ export const QuizTypeButtons: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className={styles.optionCard} onClick={startCSQuiz}>
+      <div className={styles.optionCard} onClick={onNext}>
         <div className={styles.wrapper}>
           <h3>주제별 CS 퀴즈</h3>
           <p>다양한 주제의 CS 문제로 실력을 점검하세요</p>

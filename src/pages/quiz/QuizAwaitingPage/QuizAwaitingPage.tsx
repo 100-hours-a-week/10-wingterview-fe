@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styles from './styles.module.scss'
 import bulbImage from '@assets/bulb.png'
 import { Button, LoginButton, Modal } from '@/components/ui'
-import { getQuizList } from '@/api/quizAPI'
+import { createCSQuiz, getQuizList } from '@/api/quizAPI'
 import { useAuthStore, useQuizStore } from '@/stores'
 import { useNavigate } from 'react-router-dom'
 import { Categories, QuizTypeButtons } from '@/components/features'
@@ -25,11 +25,11 @@ export const QuizAwaitingPage: React.FC = () => {
       return
     }
 
-    const delay = new Promise(resolve => setTimeout(resolve, 1500))
+    const delay = new Promise(resolve => setTimeout(resolve, 1000))
 
     try {
       if (userId) {
-        const quizzes = await getQuizList(userId)
+        const quizzes = await getQuizList(userId, 'review')
 
         if (!quizzes.length) {
           setNotFoundModal(true)
@@ -48,7 +48,7 @@ export const QuizAwaitingPage: React.FC = () => {
     await delay
   }
 
-  const startCSQuiz = async () => {
+  const goToCategory = async () => {
     if (!isLoggedIn) {
       setLoginModal(true)
       return
@@ -57,16 +57,29 @@ export const QuizAwaitingPage: React.FC = () => {
     setCurrentStep('category')
   }
 
-  const handleCategoryStart = async (category: string) => {
-    setIsGenerating(true)
+  const startCSQuiz = async (category: string) => {
+    const delay = new Promise(resolve => setTimeout(resolve, 1000))
 
-    console.log(category)
+    try {
+      if (userId) {
+        await createCSQuiz(userId, category)
+        const quizzes = await getQuizList(userId, 'cs')
 
-    const delay = new Promise(resolve => setTimeout(resolve, 1500))
+        if (!quizzes.length) {
+          setNotFoundModal(true)
+        } else {
+          setIsGenerating(true)
+          setQuizzes(quizzes)
+          setCurrentState('progress')
+          navigate('/quiz/progress')
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      setNotFoundModal(true)
+    }
+
     await delay
-
-    setCurrentState('progress')
-    navigate('/quiz/progress')
   }
 
   return (
@@ -82,14 +95,14 @@ export const QuizAwaitingPage: React.FC = () => {
           {currentStep === 'type' && (
             <QuizTypeButtons
               startReviewQuiz={startReviewQuiz}
-              startCSQuiz={startCSQuiz}
+              onNext={goToCategory}
             />
           )}
 
           {currentStep === 'category' && (
             <Categories
               onPrev={() => setCurrentStep('type')}
-              onStart={handleCategoryStart}
+              onStart={startCSQuiz}
             />
           )}
         </div>
