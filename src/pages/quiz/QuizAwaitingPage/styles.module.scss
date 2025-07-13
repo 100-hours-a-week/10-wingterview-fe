@@ -11,6 +11,7 @@
   width: 100%;
   padding: 0 20px;
   max-width: 600px;
+  margin-bottom: -25px;
 }
 
 .guideBoard {
@@ -24,10 +25,10 @@
 
 .bulbImage {
   position: absolute;
-  top: -50px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
-  width: 70px;
+  width: 55px;
   margin: 0 auto;
 }
 

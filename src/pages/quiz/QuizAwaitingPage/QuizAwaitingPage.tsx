@@ -5,10 +5,11 @@ import { Button, LoginButton, Modal } from '@/components/ui'
 import { getQuizList } from '@/api/quizAPI'
 import { useAuthStore, useQuizStore } from '@/stores'
 import { useNavigate } from 'react-router-dom'
-import { QuizTypeButtons } from '@/components/features'
+import { Categories, QuizTypeButtons } from '@/components/features'
 
 export const QuizAwaitingPage: React.FC = () => {
   const navigate = useNavigate()
+  const [currentStep, setCurrentStep] = useState<'type' | 'category'>('type')
   const [loginModal, setLoginModal] = useState(false)
   const [notFoundModal, setNotFoundModal] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -53,10 +54,15 @@ export const QuizAwaitingPage: React.FC = () => {
       return
     }
 
+    setCurrentStep('category')
+  }
+
+  const handleCategoryStart = async (category: string) => {
     setIsGenerating(true)
 
-    const delay = new Promise(resolve => setTimeout(resolve, 1500))
+    console.log(category)
 
+    const delay = new Promise(resolve => setTimeout(resolve, 1500))
     await delay
 
     setCurrentState('progress')
@@ -73,10 +79,19 @@ export const QuizAwaitingPage: React.FC = () => {
             <b>W</b>ING <b>Q</b>UIZ
           </h1>
 
-          <QuizTypeButtons
-            startReviewQuiz={startReviewQuiz}
-            startCSQuiz={startCSQuiz}
-          />
+          {currentStep === 'type' && (
+            <QuizTypeButtons
+              startReviewQuiz={startReviewQuiz}
+              startCSQuiz={startCSQuiz}
+            />
+          )}
+
+          {currentStep === 'category' && (
+            <Categories
+              onPrev={() => setCurrentStep('type')}
+              onStart={handleCategoryStart}
+            />
+          )}
         </div>
       </div>
 

@@ -29,6 +29,7 @@ export { QuizWithChoices } from './quiz/QuizWithChoices/QuizWithChoices'
 export { QuizResultCard } from './quiz/QuizResultCard/QuizResultCard'
 export { QuizResultList } from './quiz/QuizResultList/QuizResultList'
 export { QuizLevel } from './quiz/QuizLevel/QuizLevel'
+export { Categories } from './quiz/Categories/Categories'
 
 // match
 export { MatchInfoCard } from './match/MatchInfoCard/MatchInfoCard'
