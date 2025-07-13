@@ -13,15 +13,23 @@ import { TagList } from '../TagList/TagList'
 
 interface Props {
   originalProfile: MyProfileData | undefined
-  onSubmit: (updatedProfile: ProfileFormData, imageFile?: File | null) => void
+  onSubmit: () => void
 }
 
 export const ProfileEditForm: React.FC<Props> = ({
   originalProfile,
   onSubmit,
 }) => {
-  const { formData, imageURL, imageFile, setImageURL, setImageFile, setIsKTB } =
-    useProfileStore()
+  const {
+    imageURL,
+    setImageURL,
+    setImageFile,
+    updateBasicInfo,
+    updateJobInterest,
+    updateTechStack,
+    updateProfileImage,
+    setIsKTB,
+  } = useProfileStore()
 
   const {
     profileImageUrl,
@@ -32,14 +40,13 @@ export const ProfileEditForm: React.FC<Props> = ({
     techStack,
   } = originalProfile as MyProfileData
 
-  const [isKTB, setIsKTBState] = useState<boolean>(true)
+  const [isKTB, setIsKTBState] = useState<boolean>(!!curriculum)
   const [imageError, setImageError] = useState<string>('')
   const [currentData, setCurrentData] = useState({
     name: name || '',
     nickname: nickname || '',
     curriculum: curriculum || '',
   })
-
   const [selectedJobInterests, setSelectedJobInterests] = useState<string[]>(
     jobInterest || []
   )
@@ -57,6 +64,7 @@ export const ProfileEditForm: React.FC<Props> = ({
     })
     setSelectedJobInterests(jobInterest || [])
     setSelectedTechStacks(techStack || [])
+    setIsKTBState(!!curriculum)
   }, [name, nickname, curriculum, jobInterest, techStack])
 
   const toggleJobInterests = (tag: string) => {
@@ -123,7 +131,6 @@ export const ProfileEditForm: React.FC<Props> = ({
 
   const handleKTBToggle = (value: boolean) => {
     setIsKTBState(value)
-    setIsKTB(value)
 
     if (!value) {
       setCurrentData(prev => ({
@@ -151,15 +158,20 @@ export const ProfileEditForm: React.FC<Props> = ({
     e.preventDefault()
 
     try {
-      const updatedFormData = {
-        ...formData,
-        ...currentData,
-        isKTB,
-        jobInterest: selectedJobInterests,
-        techStack: selectedTechStacks,
+      updateBasicInfo(
+        currentData.name,
+        currentData.nickname,
+        isKTB ? currentData.curriculum : ''
+      )
+      updateJobInterest(selectedJobInterests)
+      updateTechStack(selectedTechStacks)
+      setIsKTB(isKTB)
+
+      if (imageURL && imageURL !== profileImageUrl) {
+        updateProfileImage(`profile_${Date.now()}`)
       }
 
-      await onSubmit(updatedFormData, imageFile)
+      await onSubmit()
     } catch (error) {
       console.error('프로필 수정 실패:', error)
     }
@@ -195,7 +207,7 @@ export const ProfileEditForm: React.FC<Props> = ({
           </label>
         </div>
 
-        {imageURL && (
+        {imageURL && imageURL !== profileImageUrl && (
           <button
             type="button"
             onClick={handleResetImage}
@@ -283,7 +295,7 @@ export const ProfileEditForm: React.FC<Props> = ({
       </fieldset>
 
       <div className={styles.submitButton}>
-        <Button text="프로필 수정" onClick={() => {}} />
+        <Button text={'프로필 수정'} onClick={() => {}} />
       </div>
     </form>
   )

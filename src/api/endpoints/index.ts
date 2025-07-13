@@ -5,6 +5,7 @@ export const API = {
   PROFILE: {
     SUBMIT: '/user',
     ME: '/user/me',
+    EDIT: (userId: string) => `/user/${userId}`,
   },
   SEAT: {
     ALL: '/user/seats',

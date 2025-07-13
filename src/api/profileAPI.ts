@@ -25,3 +25,19 @@ export const fetchMyProfile = async () => {
     throw error
   }
 }
+
+export const editProfile = async (
+  profileData: ProfileFormData,
+  userId: string
+) => {
+  try {
+    const response = await apiClient.put<ApiResponse<null>>(
+      API.PROFILE.EDIT(userId),
+      profileData
+    )
+    return response.data
+  } catch (error) {
+    console.error('프로필 수정 실패:', error)
+    throw error
+  }
+}
