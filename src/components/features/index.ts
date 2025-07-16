@@ -24,11 +24,12 @@ export { AnswerArea } from './interview/AnswerArea/AnswerArea'
 export { AudioController } from './interview/AudioController/AudioController'
 
 // quiz
-export { QuizTypeSelection } from './quiz/QuizTypeSelection/QuizTypeSelection'
+export { QuizTypeButtons } from './quiz/QuizTypeButtons/QuizTypeButtons'
 export { QuizWithChoices } from './quiz/QuizWithChoices/QuizWithChoices'
 export { QuizResultCard } from './quiz/QuizResultCard/QuizResultCard'
 export { QuizResultList } from './quiz/QuizResultList/QuizResultList'
 export { QuizLevel } from './quiz/QuizLevel/QuizLevel'
+export { Categories } from './quiz/Categories/Categories'
 
 // match
 export { MatchInfoCard } from './match/MatchInfoCard/MatchInfoCard'
@@ -43,6 +44,8 @@ export { FindSeatButton } from './seat/FindSeatButton/FindSeatButton'
 export { MyProfileCard } from './mypage/MyProfileCard/MyProfileCard'
 export { FeatureCard } from './mypage/FeatureCard/FeatureCard'
 export { QuizFilterButton } from './mypage/QuizFilterButton/QuizFilterButton'
+export { TagList } from './mypage/TagList/TagList'
+export { ProfileEditForm } from './mypage/ProfileEditForm/ProfileEditForm'
 
 // interview-history
 export { InterviewHistoryList } from './interview-history/InterviewHistoryList/InterviewHistoryList'

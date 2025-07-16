@@ -7,4 +7,7 @@
 
 .container {
   width: 100%;
+  height: calc(100% - 60px);
+  padding: 40px 20px;
+  overflow-y: auto;
 }

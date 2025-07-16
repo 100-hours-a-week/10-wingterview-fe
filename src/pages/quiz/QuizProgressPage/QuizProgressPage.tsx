@@ -6,7 +6,7 @@ import wingLeft from '@/assets/wing-l.png'
 import wingRight from '@/assets/wing-r.png'
 import styles from './styles.module.scss'
 import { Button, Modal } from '@/components/ui'
-import { sendQuizResult } from '@/api/quizAPI'
+import { sendCSQuizResult, sendQuizResult } from '@/api/quizAPI'
 
 export const QuizProgressPage = () => {
   const navigate = useNavigate()
@@ -19,10 +19,10 @@ export const QuizProgressPage = () => {
     quizzes,
     currentIndex,
     userAnswers,
-    isTrial,
     setCurrentIndex,
     setCurrentState,
     resetQuiz,
+    quizType,
   } = useQuizStore()
 
   const isDone = userAnswers[userAnswers.length - 1] !== -1
@@ -51,7 +51,7 @@ export const QuizProgressPage = () => {
     setIsFinishing(true)
     const delay = new Promise(resolve => setTimeout(resolve, 1500))
 
-    if (userId && !isTrial) {
+    if (userId) {
       const result = quizzes.map((quiz, idx) => {
         const selectedIdx = userAnswers[idx]
         return {
@@ -61,13 +61,18 @@ export const QuizProgressPage = () => {
         }
       })
 
-      await sendQuizResult(userId, result)
+      if (quizType === 'review') {
+        await sendQuizResult(userId, result)
+      } else if (quizType === 'cs') {
+        await sendCSQuizResult(userId, result)
+      }
     }
 
     await delay
 
     setIsFinishing(false)
     setCurrentState('result')
+    resetQuiz()
     navigate('/quiz/result')
   }
 
@@ -112,7 +117,7 @@ export const QuizProgressPage = () => {
           )}
 
           <button
-            onClick={handleNext}
+            onClick={isDone ? handleEnd : handleNext}
             disabled={userAnswers[currentIndex] === -1}
           >
             <img src={wingRight} alt="다음 버튼" />

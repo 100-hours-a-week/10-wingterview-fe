@@ -2,61 +2,42 @@ import { useState } from 'react'
 import styles from './styles.module.scss'
 import bulbImage from '@assets/bulb.png'
 import { Button, LoginButton, Modal } from '@/components/ui'
-import { getQuizList } from '@/api/quizAPI'
+import { createCSQuiz, getQuizList } from '@/api/quizAPI'
 import { useAuthStore, useQuizStore } from '@/stores'
-import { DUMMY_QUIZZES } from '@/constants/quizzes'
 import { useNavigate } from 'react-router-dom'
-import { useProfile } from '@/hooks'
-import { ChevronRight } from 'lucide-react'
+import { Categories, QuizTypeButtons } from '@/components/features'
 
 export const QuizAwaitingPage: React.FC = () => {
   const navigate = useNavigate()
+  const [currentStep, setCurrentStep] = useState<'type' | 'category'>('type')
   const [loginModal, setLoginModal] = useState(false)
   const [notFoundModal, setNotFoundModal] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
 
   const userId = useAuthStore(state => state.userId)
-  const setIsTrial = useQuizStore(state => state.setIsTrial)
   const setQuizzes = useQuizStore(state => state.setQuizzes)
+  const setQuizType = useQuizStore(state => state.setQuizType)
   const setCurrentState = useQuizStore(state => state.setCurrentState)
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
 
-  const { myData } = useProfile('get')
-
-  const setDummyQuizzes = () => {
-    switch (myData?.curriculum) {
-      case '풀스택':
-        setQuizzes(DUMMY_QUIZZES.fullstack)
-        return
-      case '클라우드':
-        setQuizzes(DUMMY_QUIZZES.cloud)
-        return
-      case '인공지능':
-        setQuizzes(DUMMY_QUIZZES.ai)
-        return
-      default:
-        setQuizzes(DUMMY_QUIZZES.fullstack)
-        return
-    }
-  }
-
-  const handleStartQuiz = async () => {
+  const startReviewQuiz = async () => {
     if (!isLoggedIn) {
       setLoginModal(true)
       return
     }
 
-    const delay = new Promise(resolve => setTimeout(resolve, 1500))
+    const delay = new Promise(resolve => setTimeout(resolve, 1000))
 
     try {
       if (userId) {
-        const quizzes = await getQuizList(userId)
+        const quizzes = await getQuizList(userId, 'review')
 
         if (!quizzes.length) {
           setNotFoundModal(true)
         } else {
           setIsGenerating(true)
           setQuizzes(quizzes)
+          setQuizType('review')
           setCurrentState('progress')
           navigate('/quiz/progress')
         }
@@ -69,17 +50,39 @@ export const QuizAwaitingPage: React.FC = () => {
     await delay
   }
 
-  const trial = async () => {
-    setIsGenerating(true)
+  const goToCategory = async () => {
+    if (!isLoggedIn) {
+      setLoginModal(true)
+      return
+    }
 
-    const delay = new Promise(resolve => setTimeout(resolve, 1500))
+    setCurrentStep('category')
+  }
+
+  const startCSQuiz = async (category: string) => {
+    const delay = new Promise(resolve => setTimeout(resolve, 1000))
+
+    try {
+      if (userId) {
+        await createCSQuiz(userId, category)
+        const quizzes = await getQuizList(userId, 'cs')
+
+        if (!quizzes.length) {
+          setNotFoundModal(true)
+        } else {
+          setIsGenerating(true)
+          setQuizzes(quizzes)
+          setQuizType('cs')
+          setCurrentState('progress')
+          navigate('/quiz/progress')
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      setNotFoundModal(true)
+    }
 
     await delay
-
-    setIsTrial(true)
-    setDummyQuizzes()
-    setCurrentState('progress')
-    navigate('/quiz/progress')
   }
 
   return (
@@ -88,29 +91,23 @@ export const QuizAwaitingPage: React.FC = () => {
         <div className={styles.guideBoard}>
           <img src={bulbImage} alt="" className={styles.bulbImage} />
 
-          <div className={styles.guideText}>
-            <h3>You Quiz ? Wing Quiz ! </h3>
-            <p>
-              내 개발 지식은 어느 정도일까? <br />
-              <b>윙퀴즈</b>와 함께 실력을 테스트해봐요!
-            </p>
-          </div>
+          <h1 className={styles.title}>
+            <b>W</b>ING <b>Q</b>UIZ
+          </h1>
 
-          <div className={styles.reviewQuizButton} onClick={handleStartQuiz}>
-            <div className={styles.text}>
-              <p>모의면접 복습 퀴즈 </p>
-              <span>
-                Mr.윙과 진행한 모의면접을 <br />
-                퀴즈로 복습해보세요
-              </span>
-            </div>
-            <ChevronRight size={30} className={styles.icon} />
-          </div>
+          {currentStep === 'type' && (
+            <QuizTypeButtons
+              startReviewQuiz={startReviewQuiz}
+              onNext={goToCategory}
+            />
+          )}
 
-          <div className={styles.trial}>
-            <p>윙퀴즈가 궁금하신가요? </p>
-            <button onClick={trial}>윙퀴즈 체험하기</button>
-          </div>
+          {currentStep === 'category' && (
+            <Categories
+              onPrev={() => setCurrentStep('type')}
+              onStart={startCSQuiz}
+            />
+          )}
         </div>
       </div>
 

@@ -4,19 +4,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 12px;
-  padding-right: 10px;
   border-radius: 25px;
-  border: 2.3px solid $blue-1;
-  background-color: #fff;
+  background: #fff;
   color: #555;
-  font-size: 14px;
   cursor: pointer;
   transition: all 0.15s ease;
 
   &.selected {
-    background-color: $blue-2;
-    border-color: $blue-2;
     color: #fff;
     opacity: 1;
 
@@ -36,7 +30,48 @@
 
     svg {
       color: #444;
+    }
+  }
+}
+
+.large {
+  border: 2px solid $blue-1;
+  padding: 6px 12px;
+  padding-right: 10px;
+  font-size: 14px;
+
+  .icon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  &.selected {
+    background-color: $blue-2;
+    border-color: $blue-2;
+
+    .icon svg {
       width: 15px;
+    }
+  }
+}
+
+.small {
+  border: 1px solid #333;
+  padding: 4px 8px;
+  padding-right: 6px;
+  font-size: 11px;
+  letter-spacing: -1px;
+
+  .icon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &.selected {
+    background: #333;
+
+    .icon svg {
+      width: 12px;
     }
   }
 }

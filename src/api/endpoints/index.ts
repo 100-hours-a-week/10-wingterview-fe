@@ -5,6 +5,7 @@ export const API = {
   PROFILE: {
     SUBMIT: '/user',
     ME: '/user/me',
+    EDIT: (userId: string) => `/user/${userId}`,
   },
   SEAT: {
     ALL: '/user/seats',
@@ -16,7 +17,10 @@ export const API = {
     RESULT: '/matching/result',
   },
   QUIZ: {
-    TODAY: (userId: string) => `/today-quiz/${userId}`,
+    REVIEW: (userId: string) => `/today-quiz/${userId}`,
+    CS: (userId: string) => `/quiz/cs-quiz/${userId}`,
+    CS_CREATE: (userId: string, category: string) =>
+      `/quiz/cs-quiz/${userId}?category=${category}`,
     STAT: (userId: string) => `/user/${userId}/quiz-stats`,
     HISTORY: (userId: string, wrong: boolean, limit: number, cursor?: string) =>
       `/user/${userId}/quizzes?wrong=${wrong}&limit=${limit}${cursor ? `&cursor=${cursor}` : ''}`,

@@ -1,0 +1,22 @@
+@use '@/styles/variables' as *;
+
+.tagList {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  background: #f8f8f8;
+  border-radius: 25px;
+  padding: 20px 5px;
+
+  &::-webkit-scrollbar {
+    right: 20px;
+    width: 8px;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $gray-5;
+    border-radius: 4px;
+  }
+}

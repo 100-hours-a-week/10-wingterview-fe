@@ -1,10 +1,14 @@
 import apiClient from '@/api/apiClient'
 import { API } from './endpoints'
 
-export const getQuizList = async (myId: string) => {
+export const createCSQuiz = async (userId: string, category: string) => {
+  await apiClient.post(API.QUIZ.CS_CREATE(userId, category))
+}
+
+export const getQuizList = async (myId: string, type: 'review' | 'cs') => {
   try {
     const response = await apiClient.get<ApiResponse<{ quizList: QuizData[] }>>(
-      API.QUIZ.TODAY(myId)
+      type === 'review' ? API.QUIZ.REVIEW(myId) : API.QUIZ.CS(myId)
     )
     return response.data.data.quizList
   } catch (error) {
@@ -17,12 +21,26 @@ export const getQuizList = async (myId: string) => {
   }
 }
 
+export const sendCSQuizResult = async (
+  myId: string,
+  result: UserAnswerData[]
+) => {
+  try {
+    await apiClient.put<ApiResponse<null>>(API.QUIZ.CS(myId), {
+      quizzes: result,
+    })
+  } catch (error) {
+    console.error('퀴즈 결과 전송 실패:', error)
+    throw error
+  }
+}
+
 export const sendQuizResult = async (
   myId: string,
   result: UserAnswerData[]
 ) => {
   try {
-    await apiClient.post<ApiResponse<null>>(API.QUIZ.TODAY(myId), {
+    await apiClient.post<ApiResponse<null>>(API.QUIZ.REVIEW(myId), {
       quizzes: result,
     })
   } catch (error) {
