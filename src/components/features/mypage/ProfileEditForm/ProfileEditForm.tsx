@@ -16,6 +16,7 @@ import {
   validateTechStack,
 } from '@/utils/validators'
 import { parseSeatPosition } from '@/utils/parseSeatPosition'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   originalProfile: MyProfileData | undefined
@@ -46,9 +47,11 @@ export const ProfileEditForm: React.FC<Props> = ({
     curriculum,
     jobInterest,
     techStack,
+    isKTB,
   } = originalProfile as MyProfileData
 
-  const [isKTB, setIsKTBState] = useState<boolean>(!!curriculum)
+  const navigate = useNavigate()
+
   const [currentData, setCurrentData] = useState({
     name: name || '',
     nickname: nickname || '',
@@ -73,7 +76,6 @@ export const ProfileEditForm: React.FC<Props> = ({
     })
     setSelectedJobInterests(jobInterest || [])
     setSelectedTechStacks(techStack || [])
-    setIsKTBState(!!curriculum)
 
     setFormErrors({})
     setShowValidationErrors(false)
@@ -168,7 +170,7 @@ export const ProfileEditForm: React.FC<Props> = ({
   }
 
   const handleKTBToggle = (value: boolean) => {
-    setIsKTBState(value)
+    setIsKTB(value)
 
     if (!value) {
       setCurrentData(prev => ({
@@ -275,6 +277,7 @@ export const ProfileEditForm: React.FC<Props> = ({
       }
 
       await onSubmit()
+      navigate('mypage')
     } catch (error) {
       console.error('프로필 수정 실패:', error)
     }
