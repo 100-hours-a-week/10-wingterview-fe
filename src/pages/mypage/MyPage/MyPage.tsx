@@ -24,7 +24,7 @@ export const MyPage: React.FC = () => {
     <div className={styles.myPage}>
       <div className={styles.pageHeader}>
         <h1 className={styles.title}>MY PROFILE</h1>
-        <button className={styles.editButton} onClick={() => navigate('edit')}>
+        <button className={styles.editButton} onClick={() => linkTo('edit')}>
           <SquarePen />
         </button>
       </div>
