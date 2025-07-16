@@ -72,6 +72,7 @@ export const QuizProgressPage = () => {
 
     setIsFinishing(false)
     setCurrentState('result')
+    resetQuiz()
     navigate('/quiz/result')
   }
 
@@ -116,7 +117,7 @@ export const QuizProgressPage = () => {
           )}
 
           <button
-            onClick={handleNext}
+            onClick={isDone ? handleEnd : handleNext}
             disabled={userAnswers[currentIndex] === -1}
           >
             <img src={wingRight} alt="다음 버튼" />
