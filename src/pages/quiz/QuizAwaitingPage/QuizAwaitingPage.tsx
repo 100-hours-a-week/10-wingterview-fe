@@ -18,9 +18,12 @@ export const QuizAwaitingPage: React.FC = () => {
   const setQuizzes = useQuizStore(state => state.setQuizzes)
   const setQuizType = useQuizStore(state => state.setQuizType)
   const setCurrentState = useQuizStore(state => state.setCurrentState)
+  const resetQuiz = useQuizStore(state => state.resetQuiz)
+
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
 
   const startReviewQuiz = async () => {
+    resetQuiz()
     if (!isLoggedIn) {
       setLoginModal(true)
       return
@@ -60,6 +63,7 @@ export const QuizAwaitingPage: React.FC = () => {
   }
 
   const startCSQuiz = async (category: string) => {
+    resetQuiz()
     const delay = new Promise(resolve => setTimeout(resolve, 1000))
 
     try {
