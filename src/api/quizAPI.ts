@@ -21,6 +21,20 @@ export const getQuizList = async (myId: string, type: 'review' | 'cs') => {
   }
 }
 
+export const sendCSQuizResult = async (
+  myId: string,
+  result: UserAnswerData[]
+) => {
+  try {
+    await apiClient.put<ApiResponse<null>>(API.QUIZ.CS(myId), {
+      quizzes: result,
+    })
+  } catch (error) {
+    console.error('퀴즈 결과 전송 실패:', error)
+    throw error
+  }
+}
+
 export const sendQuizResult = async (
   myId: string,
   result: UserAnswerData[]

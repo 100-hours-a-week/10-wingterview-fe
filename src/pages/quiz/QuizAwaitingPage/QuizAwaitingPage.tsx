@@ -16,6 +16,7 @@ export const QuizAwaitingPage: React.FC = () => {
 
   const userId = useAuthStore(state => state.userId)
   const setQuizzes = useQuizStore(state => state.setQuizzes)
+  const setQuizType = useQuizStore(state => state.setQuizType)
   const setCurrentState = useQuizStore(state => state.setCurrentState)
   const isLoggedIn = useAuthStore(state => state.isLoggedIn)
 
@@ -36,6 +37,7 @@ export const QuizAwaitingPage: React.FC = () => {
         } else {
           setIsGenerating(true)
           setQuizzes(quizzes)
+          setQuizType('review')
           setCurrentState('progress')
           navigate('/quiz/progress')
         }
@@ -70,6 +72,7 @@ export const QuizAwaitingPage: React.FC = () => {
         } else {
           setIsGenerating(true)
           setQuizzes(quizzes)
+          setQuizType('cs')
           setCurrentState('progress')
           navigate('/quiz/progress')
         }
