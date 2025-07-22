@@ -4,6 +4,7 @@ import { Share2, Play } from 'lucide-react'
 import { useState } from 'react'
 import styles from './styles.module.scss'
 import { ShareModal } from '../../board/ShareModal/ShareModal'
+import { StarRating } from '@/components/ui/StarRating/StarRating'
 
 interface Props {
   feedback: Feedback
@@ -11,7 +12,7 @@ interface Props {
 }
 
 export const FeedbackCard: React.FC<Props> = ({ feedback, idx }) => {
-  const { segmentId, question, modelAnswer, commentary, startAt, endAt } =
+  const { segmentId, question, modelAnswer, score, details, startAt, endAt } =
     feedback
   const { jumpTo } = useAudioStore()
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
@@ -44,22 +45,26 @@ export const FeedbackCard: React.FC<Props> = ({ feedback, idx }) => {
         )}
       </div>
 
-      <h3 className={styles.question}>
+      <h2 className={styles.question}>
         Q{idx + 1}. {question}
-      </h3>
+      </h2>
+
+      <section className={styles.section}>
+        <h3 className={styles.sectionTitle}>
+          Mr.Wing의 피드백
+          <div className={styles.stars}>
+            <StarRating score={score} />
+          </div>
+        </h3>
+
+        <p>{details}</p>
+      </section>
 
       <div className={styles.answer}>
         {modelAnswer && (
           <div className={styles.modelAnswer}>
             <h4>모범 답안</h4>
             <p>{modelAnswer}</p>
-          </div>
-        )}
-
-        {commentary && (
-          <div className={styles.feedback}>
-            <h4>피드백</h4>
-            <p>{commentary}</p>
           </div>
         )}
       </div>
