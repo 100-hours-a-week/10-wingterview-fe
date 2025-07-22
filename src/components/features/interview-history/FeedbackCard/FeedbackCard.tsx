@@ -1,6 +1,6 @@
 import { timeFormatter } from '@/utils'
 import { useAudioStore } from '@/stores'
-import { Share2, Play } from 'lucide-react'
+import { Share2, Play, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 import styles from './styles.module.scss'
 import { ShareModal } from '../../board/ShareModal/ShareModal'
@@ -12,13 +12,27 @@ interface Props {
 }
 
 export const FeedbackCard: React.FC<Props> = ({ feedback, idx }) => {
-  const { segmentId, question, modelAnswer, score, details, startAt, endAt } =
-    feedback
+  const {
+    segmentId,
+    question,
+    modelAnswer,
+    score,
+    goodPoints,
+    improvements,
+    details,
+    startAt,
+    endAt,
+  } = feedback
   const { jumpTo } = useAudioStore()
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [showModelAnswer, setShowModelAnswer] = useState(false)
 
   const toggleShareModal = () => {
     setIsShareModalOpen(!isShareModalOpen)
+  }
+
+  const toggleModelAnswer = () => {
+    setShowModelAnswer(!showModelAnswer)
   }
 
   return (
@@ -57,17 +71,39 @@ export const FeedbackCard: React.FC<Props> = ({ feedback, idx }) => {
           </div>
         </h3>
 
-        <p>{details}</p>
+        <div className={styles.textContainer}>
+          <p>{details}</p>
+
+          <h4 className={styles.subtitle}>잘한 점</h4>
+          <p>{goodPoints}</p>
+
+          <h4 className={styles.subtitle}>개선할 점</h4>
+          <p>{improvements}</p>
+        </div>
       </section>
 
-      <div className={styles.answer}>
-        {modelAnswer && (
-          <div className={styles.modelAnswer}>
-            <h4>모범 답안</h4>
+      <section className={styles.section}>
+        <button className={styles.toggleButton} onClick={toggleModelAnswer}>
+          {showModelAnswer ? (
+            <>
+              <span>모범답안 닫기</span>
+              <ChevronUp size={16} />
+            </>
+          ) : (
+            <>
+              <span>모범답안 보기</span>
+              <ChevronDown size={16} />
+            </>
+          )}
+        </button>
+
+        {showModelAnswer && (
+          <div className={styles.textContainer}>
+            <h3 className={styles.sectionTitle}>모범 답안</h3>
             <p>{modelAnswer}</p>
           </div>
         )}
-      </div>
+      </section>
 
       <ShareModal
         isOpen={isShareModalOpen}
