@@ -25,7 +25,7 @@ export const QuizProgressPage = () => {
     quizType,
   } = useQuizStore()
 
-  const isDone = userAnswers[userAnswers.length - 1] !== -1
+  const isDone = userAnswers[9] && userAnswers[9] !== -1
 
   const handleNext = () => {
     if (currentIndex === quizzes.length - 1) {
@@ -72,7 +72,6 @@ export const QuizProgressPage = () => {
 
     setIsFinishing(false)
     setCurrentState('result')
-    resetQuiz()
     navigate('/quiz/result')
   }
 

@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  ProfileImage,
-  ErrorMessage,
-  Button,
-  KTBOptionToggle,
-} from '@/components/ui'
+import { ProfileImage, ErrorMessage, Button } from '@/components/ui'
 import { jobInterestList, techStackList } from '@/constants/tagList'
 import { Pencil } from 'lucide-react'
 import styles from './styles.module.scss'
@@ -35,7 +30,6 @@ export const ProfileEditForm: React.FC<Props> = ({
     updateJobInterest,
     updateTechStack,
     updateProfileImage,
-    setIsKTB,
     formErrors,
     setFormErrors,
   } = useProfileStore()
@@ -169,22 +163,6 @@ export const ProfileEditForm: React.FC<Props> = ({
     if (fileInput) fileInput.value = ''
   }
 
-  const handleKTBToggle = (value: boolean) => {
-    setIsKTB(value)
-
-    if (!value) {
-      setCurrentData(prev => ({
-        ...prev,
-        curriculum: '',
-      }))
-    }
-
-    if (showValidationErrors && formErrors.curriculum) {
-      const { ...rest } = formErrors
-      setFormErrors(rest)
-    }
-  }
-
   const handleInputChange = (field: string, value: string) => {
     setCurrentData(prev => ({
       ...prev,
@@ -253,9 +231,7 @@ export const ProfileEditForm: React.FC<Props> = ({
       .map(([, value]) => value)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleSubmit = async () => {
     setShowValidationErrors(true)
 
     if (!validateForm()) {
@@ -270,14 +246,13 @@ export const ProfileEditForm: React.FC<Props> = ({
       )
       updateJobInterest(selectedJobInterests)
       updateTechStack(selectedTechStacks)
-      setIsKTB(isKTB)
 
       if (imageURL && imageURL !== profileImageUrl) {
         updateProfileImage(`profile_${Date.now()}`)
       }
 
       await onSubmit()
-      navigate('mypage')
+      navigate('/mypage')
     } catch (error) {
       console.error('프로필 수정 실패:', error)
     }
@@ -286,7 +261,7 @@ export const ProfileEditForm: React.FC<Props> = ({
   const validationErrors = getValidationErrors()
 
   return (
-    <form className={styles.profileEditForm} onSubmit={handleSubmit}>
+    <form className={styles.profileEditForm} onSubmit={e => e.preventDefault()}>
       <fieldset className={styles.profileImage}>
         <div className={styles.imageWrapper}>
           <div
@@ -329,7 +304,7 @@ export const ProfileEditForm: React.FC<Props> = ({
       <fieldset className={styles.basicInfo}>
         <h3>기본 정보</h3>
 
-        <KTBOptionToggle isKTB={isKTB} onChange={handleKTBToggle} />
+        {/* <KTBOptionToggle isKTB={isKTB} onChange={handleKTBToggle} /> */}
 
         <div className={styles.container}>
           <div className={styles.inputWrapper}>
@@ -413,7 +388,7 @@ export const ProfileEditForm: React.FC<Props> = ({
       )}
 
       <div className={styles.submitButton}>
-        <Button text={'프로필 수정'} onClick={() => {}} />
+        <Button text={'프로필 수정'} onClick={handleSubmit} />
       </div>
     </form>
   )

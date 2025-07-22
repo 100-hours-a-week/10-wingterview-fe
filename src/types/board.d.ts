@@ -19,7 +19,10 @@ interface BoardDetailData {
   authorProfileImageUrl: string
   question: string
   modelAnswer: string
-  feedback: string
+  score: number
+  goodPoints: string
+  improvements: string
+  details: string
   authorComment: string
   viewCnt: number
   createdAt: string

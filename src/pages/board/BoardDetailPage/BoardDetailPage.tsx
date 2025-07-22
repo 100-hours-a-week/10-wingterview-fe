@@ -1,8 +1,9 @@
-import { SubPageHeader } from '@/components/ui'
+import { ProfileImage, SubPageHeader } from '@/components/ui'
 import styles from './styles.module.scss'
 import { useParams } from 'react-router-dom'
 import { useBoardDetail } from '@/hooks/board/useBoard'
 import { dateFormatter } from '@/utils'
+import { StarRating } from '@/components/ui'
 
 export const BoardDetailPage = () => {
   const { boardId } = useParams<{ boardId: string }>()
@@ -23,11 +24,8 @@ export const BoardDetailPage = () => {
       <div className={styles.container}>
         <div className={styles.title}>
           <div className={styles.authorInfo}>
-            <img
-              src={post.authorProfileImageUrl}
-              alt={post.authorNickname}
-              className={styles.avatar}
-            />
+            <ProfileImage url={post.authorProfileImageUrl} />
+
             <div className={styles.authorMeta}>
               <h3 className={styles.authorName}>{post.authorNickname}</h3>
               <div className={styles.meta}>
@@ -47,18 +45,35 @@ export const BoardDetailPage = () => {
           </div>
 
           <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>모범 답변</h2>
-            <p className={styles.modelAnswer}>{post.modelAnswer}</p>
+            <h2 className={styles.sectionTitle}>
+              Mr.Wing의 피드백
+              <div className={styles.stars}>
+                <StarRating score={post.score} />
+              </div>
+            </h2>
+            <div className={styles.feedback}>
+              <p>{post.details}</p>
+
+              <h3 className={styles.subtitle}>잘한 점</h3>
+              <p>{post.goodPoints}</p>
+
+              <h3 className={styles.subtitle}>개선할 점</h3>
+              <p>{post.improvements}</p>
+            </div>
           </div>
 
           <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>AI 피드백</h2>
-            <p className={styles.feedback}>{post.feedback}</p>
+            <h2 className={styles.sectionTitle}>모범 답변</h2>
+            <div className={styles.modelAnswer}>
+              <p>{post.modelAnswer}</p>
+            </div>
           </div>
 
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>면접자 코멘트</h2>
-            <p className={styles.authorComment}>{post.authorComment}</p>
+            <div className={styles.authorComment}>
+              <p>{post.authorComment}</p>
+            </div>
           </div>
         </div>
       </div>
