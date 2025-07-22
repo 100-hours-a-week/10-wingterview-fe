@@ -63,19 +63,40 @@
   font-weight: 600;
 }
 
-.answer {
+.section + .section {
+  margin-top: 20px;
+}
+
+.sectionTitle {
+  position: relative;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.stars {
+  position: absolute;
+  left: 125px;
+  top: 3px;
+}
+
+.textContainer {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-top: 15px;
+}
+
+.subtitle {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.toggleButton {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  h4 {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  p {
-    font-size: 15px;
-    line-height: 1.6;
-  }
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #6c757d;
+  margin: 0 auto;
 }

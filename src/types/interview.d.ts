@@ -57,7 +57,10 @@ interface Feedback {
   segmentId: string
   question: string
   modelAnswer: string
-  commentary: string
+  score: number
+  goodPoints: string
+  improvements: string
+  details: string
   startAt: number
   endAt: number
 }

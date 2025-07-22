@@ -1,0 +1,24 @@
+@use '@/styles/variables' as *;
+
+.stars {
+  display: flex;
+  gap: 3px;
+
+  span {
+    display: flex;
+    align-items: center;
+
+    &.filled {
+      color: $yellow;
+    }
+
+    &.empty {
+      color: #d1d5db;
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}

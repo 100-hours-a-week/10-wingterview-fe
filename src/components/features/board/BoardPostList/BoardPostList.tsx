@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react'
 import styles from './styles.module.scss'
-import { LoadingIndicator } from '@/components/ui'
+import { LoadingIndicator, ProfileImage } from '@/components/ui'
 import { useNavigate } from 'react-router-dom'
 import { dateFormatter } from '@/utils'
 
@@ -64,11 +64,7 @@ export const BoardPostList: React.FC<Props> = ({
                   </div>
                 </div>
                 <div className={styles.author}>
-                  <img
-                    src={post.authorProfileImageUrl}
-                    alt={post.authorNickname}
-                    className={styles.avatar}
-                  />
+                  <ProfileImage url={post.authorProfileImageUrl} size={45} />
                 </div>
               </div>
             </div>
@@ -77,11 +73,7 @@ export const BoardPostList: React.FC<Props> = ({
               <p className={styles.name}>{post.authorNickname}</p>
               <div className={styles.avatarAndBubble}>
                 <div className={styles.author}>
-                  <img
-                    src={post.authorProfileImageUrl}
-                    alt={post.authorNickname}
-                    className={styles.avatar}
-                  />
+                  <ProfileImage url={post.authorProfileImageUrl} size={45} />
                 </div>
                 <div className={styles.content}>
                   <div className={styles.bubble}>
